@@ -1,0 +1,98 @@
+local ToDisable = {
+    Textures = true,
+    VisualEffects = true,
+    Parts = true,
+    Particles = true,
+    Sky = true
+}
+
+local ToEnable = {
+    FullBright = false
+}
+
+local Stuff = {}
+
+for _, v in next, game:GetDescendants() do
+    if ToDisable.Parts then
+        if v:IsA("Part") or v:IsA("Union") or v:IsA("BasePart") then
+            v.Material = Enum.Material.SmoothPlastic
+            table.insert(Stuff, 1, v)
+        end
+    end
+    
+    if ToDisable.Particles then
+        if v:IsA("ParticleEmitter") or v:IsA("Smoke") or v:IsA("Explosion") or v:IsA("Sparkles") or v:IsA("Fire") then
+            v.Enabled = false
+            table.insert(Stuff, 1, v)
+        end
+    end
+    
+    if ToDisable.VisualEffects then
+        if v:IsA("BloomEffect") or v:IsA("BlurEffect") or v:IsA("DepthOfFieldEffect") or v:IsA("SunRaysEffect") then
+            v.Enabled = false
+            table.insert(Stuff, 1, v)
+        end
+    end
+    
+    if ToDisable.Textures then
+        if v:IsA("Decal") or v:IsA("Texture") then
+            v.Texture = ""
+            table.insert(Stuff, 1, v)
+        end
+    end
+    
+    if ToDisable.Sky then
+        if v:IsA("Sky") then
+            v.Parent = nil
+            table.insert(Stuff, 1, v)
+        end
+    end
+end
+
+game:GetService("TestService"):Message("Effects Disabler Script : Successfully disabled "..#Stuff.." assets / effects. Settings :")
+
+for i, v in next, ToDisable do
+    print(tostring(i)..": "..tostring(v))
+end
+
+if ToEnable.FullBright then
+    local Lighting = game:GetService("Lighting")
+    
+    Lighting.FogColor = Color3.fromRGB(0, 0, 0)
+    Lighting.FogEnd = math.huge
+    Lighting.FogStart = math.huge
+    Lighting.Ambient = Color3.fromRGB(0, 0, 0)
+    Lighting.Brightness = 0
+    Lighting.ColorShift_Bottom = Color3.fromRGB(0, 0, 0)
+    Lighting.ColorShift_Top = Color3.fromRGB(0, 0, 0)
+    Lighting.OutdoorAmbient = Color3.fromRGB(0, 0, 0)
+    Lighting.Outlines = true
+end
+
+game:GetService("ReplicatedStorage").Settings.Multipliers.RagdollPower.Value = 75
+game:GetService("ReplicatedStorage").Settings.Multipliers.KnockbackPower.Value = 80
+game:GetService("ReplicatedStorage").Settings.Multipliers.ChargeRate.Value = 10
+game:GetService("ReplicatedStorage").Settings.Multipliers.AvatarScale.Value = 10
+game:GetService("ReplicatedStorage").Settings.Multipliers.RegenRate.Value = 10
+game:GetService("ReplicatedStorage").Settings.Multipliers.MeleeSpeed.Value = 115
+game:GetService("ReplicatedStorage").Settings.Cooldowns.Evasive.Value = 0
+game:GetService("ReplicatedStorage").Settings.Cooldowns.Melee.Value = 0
+game:GetService("ReplicatedStorage").Settings.Toggles.NoJumpFatigue.Value = true
+game:GetService("ReplicatedStorage").Settings.Toggles.NoSlowdowns.Value = true
+game:GetService("ReplicatedStorage").Settings.Toggles.NoStunOnMiss.Value = true
+game:GetService("ReplicatedStorage").Settings.Toggles.DisableCombatTimer.Value = true
+game:GetService("ReplicatedStorage").Settings.Toggles.AllowAllPackages.Value = false
+game:GetService("ReplicatedStorage").Settings.Multipliers.WalkSpeed.Value = 115
+
+local function SlowMotion()
+    local runService = game:GetService("RunService")
+    local slowFactor = 0.5
+
+    runService.Heartbeat:Connect(function(deltaTime)
+        game:GetService("Workspace").DistributedGameTime = game:GetService("Workspace").DistributedGameTime + deltaTime * slowFactor
+    end)
+end
+
+SlowMotion()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/hm5650/Hitblox/refs/heads/main/Hitblox"))()
