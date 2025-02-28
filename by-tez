@@ -69,12 +69,11 @@ if ToEnable.FullBright then
     Lighting.Outlines = true
 end
 
-game:GetService("ReplicatedStorage").Settings.Multipliers.RagdollPower.Value = 75
-game:GetService("ReplicatedStorage").Settings.Multipliers.KnockbackPower.Value = 80
-game:GetService("ReplicatedStorage").Settings.Multipliers.ChargeRate.Value = 999
+game:GetService("ReplicatedStorage").Settings.Multipliers.RagdollPower.Value = 0
+game:GetService("ReplicatedStorage").Settings.Multipliers.KnockbackPower.Value = 0
 game:GetService("ReplicatedStorage").Settings.Multipliers.AvatarScale.Value = 999
 game:GetService("ReplicatedStorage").Settings.Multipliers.RegenRate.Value = 10
-game:GetService("ReplicatedStorage").Settings.Multipliers.MeleeSpeed.Value = 114
+game:GetService("ReplicatedStorage").Settings.Multipliers.MeleeSpeed.Value = 999999999999
 game:GetService("ReplicatedStorage").Settings.Cooldowns.Evasive.Value = 0.5
 game:GetService("ReplicatedStorage").Settings.Cooldowns.Melee.Value = 0.5
 game:GetService("ReplicatedStorage").Settings.Toggles.NoJumpFatigue.Value = true
@@ -83,6 +82,7 @@ game:GetService("ReplicatedStorage").Settings.Toggles.NoStunOnMiss.Value = true
 game:GetService("ReplicatedStorage").Settings.Toggles.DisableCombatTimer.Value = true
 game:GetService("ReplicatedStorage").Settings.Toggles.AllowAllPackages.Value = false
 game:GetService("ReplicatedStorage").Settings.Multipliers.WalkSpeed.Value = 115
+
 
 local function SlowMotion()
     local runService = game:GetService("RunService")
