@@ -73,7 +73,7 @@ game:GetService("ReplicatedStorage").Settings.Multipliers.RagdollPower.Value = 0
 game:GetService("ReplicatedStorage").Settings.Multipliers.KnockbackPower.Value = 0
 game:GetService("ReplicatedStorage").Settings.Multipliers.AvatarScale.Value = 999
 game:GetService("ReplicatedStorage").Settings.Multipliers.RegenRate.Value = 10
-game:GetService("ReplicatedStorage").Settings.Multipliers.MeleeSpeed.Value = 999999999999
+game:GetService("ReplicatedStorage").Settings.Multipliers.MeleeSpeed.Value = 125
 game:GetService("ReplicatedStorage").Settings.Cooldowns.Evasive.Value = 0.5
 game:GetService("ReplicatedStorage").Settings.Cooldowns.Melee.Value = 0.5
 game:GetService("ReplicatedStorage").Settings.Toggles.NoJumpFatigue.Value = true
@@ -82,6 +82,40 @@ game:GetService("ReplicatedStorage").Settings.Toggles.NoStunOnMiss.Value = true
 game:GetService("ReplicatedStorage").Settings.Toggles.DisableCombatTimer.Value = true
 game:GetService("ReplicatedStorage").Settings.Toggles.AllowAllPackages.Value = false
 game:GetService("ReplicatedStorage").Settings.Multipliers.WalkSpeed.Value = 115
+game:GetService("ReplicatedStorage").Settings.Toggles.UsableWithoutCharge.Value = true
+game:GetService("Players").LocalPlayer.Passes.VIP.Value true
+
+
+local keyBind = Enum.KeyCode.E
+local blockSpeed = 6
+local blockAnimation = "Block"
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local rootPart = character:WaitForChild("HumanoidRootPart")
+local blockAnimationTrack = nil
+
+humanoid.PlatformStand = true
+humanoid.WalkSpeed = blockSpeed
+if blockAnimation then
+    local animator = humanoid:FindFirstChildOfClass("Animator")
+    if animator then
+        blockAnimationTrack = animator:LoadAnimation(game.ReplicatedStorage.Core:WaitForChild("Animations"):WaitForChild(blockAnimation))
+        blockAnimationTrack.Priority = Enum.AnimationPriority.Action4
+        blockAnimationTrack:Play()
+    end
+end
+
+game:GetService("StarterGui"):SetCore("SendNotification", {
+    Title = "Exploit de Bloqueio",
+    Text = "Bloqueio ativado permanentemente!",
+    Duration = 5
+})
+
+game:GetService("RunService").Heartbeat:Connect(function()
+    humanoid.PlatformStand = true
+    humanoid.WalkSpeed = blockSpeed
+end)
 
 
 local function SlowMotion()
