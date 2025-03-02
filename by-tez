@@ -1,95 +1,78 @@
-local ToDisable = {
-    Textures = true,
-    VisualEffects = true,
-    Parts = true,
-    Particles = true,
-    Sky = true
-}
+-- Configurações de FPS Boost e Otimização Gráfica
+local Lighting = game:GetService("Lighting")
+local Players = game:GetService("Players")
+local Terrain = workspace:FindFirstChild("Terrain")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local ToEnable = {
-    FullBright = false
-}
-
-local Stuff = {}
-
-for _, v in next, game:GetDescendants() do
-    if ToDisable.Parts then
-        if v:IsA("Part") or v:IsA("Union") or v:IsA("BasePart") then
-            v.Material = Enum.Material.SmoothPlastic
-            table.insert(Stuff, 1, v)
-        end
-    end
-    
-    if ToDisable.Particles then
-        if v:IsA("ParticleEmitter") or v:IsA("Smoke") or v:IsA("Explosion") or v:IsA("Sparkles") or v:IsA("Fire") then
-            v.Enabled = false
-            table.insert(Stuff, 1, v)
-        end
-    end
-    
-    if ToDisable.VisualEffects then
-        if v:IsA("BloomEffect") or v:IsA("BlurEffect") or v:IsA("DepthOfFieldEffect") or v:IsA("SunRaysEffect") then
-            v.Enabled = false
-            table.insert(Stuff, 1, v)
-        end
-    end
-    
-    if ToDisable.Textures then
-        if v:IsA("Decal") or v:IsA("Texture") then
-            v.Texture = ""
-            table.insert(Stuff, 1, v)
-        end
-    end
-    
-    if ToDisable.Sky then
-        if v:IsA("Sky") then
-            v.Parent = nil
-            table.insert(Stuff, 1, v)
-        end
+-- Remover efeitos visuais desnecessários
+for _, v in ipairs(Lighting:GetChildren()) do
+    if v:IsA("PostEffect") then
+        v:Destroy()
     end
 end
 
-game:GetService("TestService"):Message("Effects Disabler Script : Successfully disabled "..#Stuff.." assets / effects. Settings :")
+-- Configurações de iluminação
+Lighting.GlobalShadows = false
+Lighting.FogEnd = 9e9
+Lighting.Brightness = 2
 
-for i, v in next, ToDisable do
-    print(tostring(i)..": "..tostring(v))
+-- Otimizar partes e texturas
+local function handleInstance(instance)
+    if instance:IsA("BasePart") then
+        local player = Players.LocalPlayer
+        if player and player.Character and instance:IsDescendantOf(player.Character) then
+            return
+        end
+        instance.Material = Enum.Material.SmoothPlastic
+        instance.Reflectance = 0
+    end
+    if instance:IsA("Texture") or instance:IsA("Decal") then
+        local player = Players.LocalPlayer
+        if player and player.Character and instance:IsDescendantOf(player.Character) then
+            return
+        end
+        instance.Transparency = 1
+    end
 end
 
-if ToEnable.FullBright then
-    local Lighting = game:GetService("Lighting")
-    
-    Lighting.FogColor = Color3.fromRGB(0, 0, 0)
-    Lighting.FogEnd = math.huge
-    Lighting.FogStart = math.huge
-    Lighting.Ambient = Color3.fromRGB(0, 0, 0)
-    Lighting.Brightness = 0
-    Lighting.ColorShift_Bottom = Color3.fromRGB(0, 0, 0)
-    Lighting.ColorShift_Top = Color3.fromRGB(0, 0, 0)
-    Lighting.OutdoorAmbient = Color3.fromRGB(0, 0, 0)
-    Lighting.Outlines = true
+for _, instance in ipairs(workspace:GetDescendants()) do
+    handleInstance(instance)
 end
 
-game:GetService("ReplicatedStorage").Settings.Multipliers.RagdollPower.Value = 0
-game:GetService("ReplicatedStorage").Settings.Multipliers.KnockbackPower.Value = 0
-game:GetService("ReplicatedStorage").Settings.Multipliers.AvatarScale.Value = 999
-game:GetService("ReplicatedStorage").Settings.Multipliers.RegenRate.Value = 10
-game:GetService("ReplicatedStorage").Settings.Multipliers.MeleeSpeed.Value = 125
-game:GetService("ReplicatedStorage").Settings.Cooldowns.Evasive.Value = 0.5
-game:GetService("ReplicatedStorage").Settings.Cooldowns.Melee.Value = 0.5
-game:GetService("ReplicatedStorage").Settings.Toggles.NoJumpFatigue.Value = true
-game:GetService("ReplicatedStorage").Settings.Toggles.NoSlowdowns.Value = true
-game:GetService("ReplicatedStorage").Settings.Toggles.NoStunOnMiss.Value = true
-game:GetService("ReplicatedStorage").Settings.Toggles.DisableCombatTimer.Value = true
-game:GetService("ReplicatedStorage").Settings.Toggles.AllowAllPackages.Value = false
-game:GetService("ReplicatedStorage").Settings.Multipliers.WalkSpeed.Value = 115
-game:GetService("ReplicatedStorage").Settings.Toggles.UsableWithoutCharge.Value = true
-game:GetService("Players").LocalPlayer.Passes.VIP.Value true
+-- Configurações de terreno
+if Terrain then
+    Terrain.WaterWaveSize = 0
+    Terrain.WaterWaveSpeed = 0
+    Terrain.WaterReflectance = 0
+    Terrain.WaterTransparency = 1
+end
 
+-- Configurações de física e renderização
+settings().Physics.AllowSleep = true
+settings().Rendering.QualityLevel = 1 -- Define a qualidade gráfica para o nível mais baixo
+settings().Rendering.EagerBulkExecution = false
+
+-- Configurações de jogo (multiplicadores e toggles)
+ReplicatedStorage.Settings.Multipliers.RagdollPower.Value = 80
+ReplicatedStorage.Settings.Multipliers.KnockbackPower.Value = 80
+ReplicatedStorage.Settings.Multipliers.AvatarScale.Value = 999
+ReplicatedStorage.Settings.Multipliers.RegenRate.Value = 10
+ReplicatedStorage.Settings.Multipliers.MeleeSpeed.Value = 117
+ReplicatedStorage.Settings.Cooldowns.Evasive.Value = 0.5
+ReplicatedStorage.Settings.Cooldowns.Melee.Value = 0.5
+ReplicatedStorage.Settings.Toggles.NoJumpFatigue.Value = true
+ReplicatedStorage.Settings.Toggles.NoSlowdowns.Value = true
+ReplicatedStorage.Settings.Toggles.NoStunOnMiss.Value = true
+ReplicatedStorage.Settings.Toggles.DisableCombatTimer.Value = true
+ReplicatedStorage.Settings.Toggles.AllowAllPackages.Value = false
+ReplicatedStorage.Settings.Multipliers.WalkSpeed.Value = 115
+ReplicatedStorage.Settings.Toggles.UsableWithoutCharge.Value = true
+game:GetService("ReplicatedStorage").Settings.Toggles.DisableHitStun.Value = true
 
 local keyBind = Enum.KeyCode.E
 local blockSpeed = 6
 local blockAnimation = "Block"
-local player = game.Players.LocalPlayer
+local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoid = character:WaitForChild("Humanoid")
 local rootPart = character:WaitForChild("HumanoidRootPart")
@@ -97,10 +80,11 @@ local blockAnimationTrack = nil
 
 humanoid.PlatformStand = true
 humanoid.WalkSpeed = blockSpeed
+
 if blockAnimation then
     local animator = humanoid:FindFirstChildOfClass("Animator")
     if animator then
-        blockAnimationTrack = animator:LoadAnimation(game.ReplicatedStorage.Core:WaitForChild("Animations"):WaitForChild(blockAnimation))
+        blockAnimationTrack = animator:LoadAnimation(ReplicatedStorage.Core:WaitForChild("Animations"):WaitForChild(blockAnimation))
         blockAnimationTrack.Priority = Enum.AnimationPriority.Action4
         blockAnimationTrack:Play()
     end
@@ -117,16 +101,24 @@ game:GetService("RunService").Heartbeat:Connect(function()
     humanoid.WalkSpeed = blockSpeed
 end)
 
-
+-- Sistema de Slow Motion
 local function SlowMotion()
     local runService = game:GetService("RunService")
     local slowFactor = 0.5
 
     runService.Heartbeat:Connect(function(deltaTime)
-        game:GetService("Workspace").DistributedGameTime = game:GetService("Workspace").DistributedGameTime + deltaTime * slowFactor
+        workspace.DistributedGameTime = workspace.DistributedGameTime + deltaTime * slowFactor
     end)
 end
 
 SlowMotion()
 
+-- Sistema de Hitbox (usando Hitblox)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/hm5650/Hitblox/refs/heads/main/Hitblox"))()
+
+-- Notificação de sucesso
+game:GetService("StarterGui"):SetCore("SendNotification", {
+    Title = "Script Carregado",
+    Text = "FPS Boost, Bloqueio, Slow Motion e Hitbox ativados!",
+    Duration = 5
+})
