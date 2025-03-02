@@ -60,3 +60,5 @@ ReplicatedStorage.Settings.Toggles.DisableCombatTimer.Value = true
 ReplicatedStorage.Settings.Toggles.AllowAllPackages.Value = false
 ReplicatedStorage.Settings.Toggles.UsableWithoutCharge.Value = true
 game:GetService("ReplicatedStorage").Settings.Toggles.DisableHitStun.Value = true
+
+loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
