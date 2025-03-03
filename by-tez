@@ -51,6 +51,7 @@ ReplicatedStorage.Settings.Multipliers.KnockbackPower.Value = 80
 ReplicatedStorage.Settings.Multipliers.AvatarScale.Value = 999
 ReplicatedStorage.Settings.Multipliers.RegenRate.Value = 10
 ReplicatedStorage.Settings.Multipliers.MeleeSpeed.Value = 115
+ReplicatedStorage.Settings.Multipliers.MeleeSpeed.Value = 116
 ReplicatedStorage.Settings.Cooldowns.Evasive.Value = 0
 ReplicatedStorage.Settings.Cooldowns.Melee.Value = 0
 ReplicatedStorage.Settings.Toggles.NoJumpFatigue.Value = true
@@ -59,6 +60,3 @@ ReplicatedStorage.Settings.Toggles.NoStunOnMiss.Value = true
 ReplicatedStorage.Settings.Toggles.DisableCombatTimer.Value = true
 ReplicatedStorage.Settings.Toggles.AllowAllPackages.Value = false
 ReplicatedStorage.Settings.Toggles.UsableWithoutCharge.Value = true
-game:GetService("ReplicatedStorage").Settings.Toggles.DisableHitStun.Value = false
-
-loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
