@@ -61,3 +61,171 @@ ReplicatedStorage.Settings.Toggles.NoStunOnMiss.Value = true
 ReplicatedStorage.Settings.Toggles.DisableCombatTimer.Value = true
 ReplicatedStorage.Settings.Toggles.AllowAllPackages.Value = false
 ReplicatedStorage.Settings.Toggles.UsableWithoutCharge.Value = true
+
+local v_u_1 = require(game.ReplicatedStorage:WaitForChild("Core"))
+local v2 = {}
+local v_u_3 = nil
+local v_u_4 = nil
+
+function setup(p_u_5)
+    local v_u_6 = p_u_5:WaitForChild("Humanoid")
+    task.wait(0.25)
+    if v_u_1.Library("Instance").Exists(v_u_6) then
+        local function v10()
+            p_u_5:SetAttribute("CanBlock", true)
+        end
+        p_u_5:GetAttributeChangedSignal("Pushback"):Connect(v10)
+        p_u_5:GetAttributeChangedSignal("Ragdoll"):Connect(v10)
+        p_u_5:GetAttributeChangedSignal("Grabbed"):Connect(v10)
+        p_u_5:GetAttributeChangedSignal("Stop"):Connect(v10)
+        v_u_6:GetAttributeChangedSignal("Health"):Connect(v10)
+        v10()
+        local v_u_11 = p_u_5 == game.Players.LocalPlayer.Character
+        local v_u_12 = v_u_11 and "LocalBlock" or "Block"
+        local v_u_13 = nil
+        local v_u_14 = nil
+        local function v16()
+            local v15 = true
+            if v15 ~= v_u_13 then
+                if v_u_11 then
+                    v_u_1.Get("Character", "Move").SetSpeedOverride("Block", v15 and 6 or nil)
+                end
+                if v15 then
+                    v_u_14 = v_u_1.Get("Cache", "Animation").Get("Block", p_u_5)
+                    if v_u_14 then
+                        v_u_14.Priority = Enum.AnimationPriority.Action4
+                        v_u_14:Play()
+                    end
+                elseif v_u_14 then
+                    v_u_14:Stop()
+                    v_u_14 = nil
+                end
+                v_u_13 = v15
+            end
+        end
+        p_u_5:GetAttributeChangedSignal(v_u_12):Connect(v16)
+        p_u_5:GetAttributeChangedSignal("CanBlock"):Connect(v16)
+        v16()
+    end
+end
+
+function set(p17)
+    local v18 = game.Players.LocalPlayer.Character
+    v_u_1.Get("Character", "Move").SetJumpOverride("Block", p17 and 0 or nil)
+    v_u_1.Library("Remote").Send("Block", p17)
+    _G.Block = p17
+    v_u_4 = p17
+    local v19
+    if p17 then
+        local v20 = os.clock()
+        blockPending = true
+        while blockPending and not v18:GetAttribute("Block") do
+            task.wait()
+        end
+        v19 = os.clock() - v20
+    else
+        v19 = nil
+    end
+    v18:SetAttribute("LocalBlock", p17)
+    _G.BlockActive = p17
+    if p17 then
+        local v21 = math.clamp(v19, 0, 0.1)
+        task.wait(v21)
+        blockPending = false
+    end
+end
+
+function ragdollEndsSoon(p22)
+    local v23 = os.clock() + 0.1
+    local v24 = v_u_1.Get("Combat", "Ragdoll").EndClocks[p22]
+    if v24 then
+        v24 = v24 < v23
+    end
+    return v24
+end
+
+function check()
+    local v25 = game.Players.LocalPlayer.Character
+    local v26
+    if v25 then
+        v26 = v25:FindFirstChild("Humanoid")
+    else
+        v26 = v25
+    end
+    if v25 then
+        v25:FindFirstChild("HumanoidRootPart")
+    end
+    local v27 = _G.Emote or _G.EmoteVictim
+    if v27 then
+        v26 = v27
+    elseif v26 then
+        v26 = v26.WalkSpeed > 0
+    end
+    local v28 = not _G.MeleeActiveClock
+    if not v28 then
+        local v29 = _G.MeleeActiveClock
+        v28 = tonumber(v29)
+        if v28 then
+            v28 = os.clock() - _G.MeleeActiveClock > 0.125
+        end
+    end
+    local v30 = (v_u_3 or blockPending) and (not _G.Ragdoll or ragdollEndsSoon(v25)) and not (_G.DashLocked or _G.Ability)
+    if v30 then
+        if v28 then
+            v28 = v26 or _G.Dash
+        end
+    else
+        v28 = v30
+    end
+    if game.ReplicatedStorage.Settings.Toggles.DisableBlocking.Value then
+        v28 = false
+    end
+    if v28 ~= v_u_4 then
+        set(v28)
+    end
+end
+
+function v2.BlockedHit(p31, p32)
+    if v_u_1.Library("Instance").Exists(p31) then
+        local function v37(p_u_33)
+            if p_u_33 then
+                local v_u_34 = (p_u_33:GetAttribute("Number") or 0) + 1
+                local v_u_35 = p_u_33.C0.Position
+                local v36 = v_u_1.Library("CFrame").GenerateAngle(10) + v_u_35
+                v_u_1.Library("Tween").New(p_u_33, "C0", v36, 0.125, "Sine")
+                p_u_33:SetAttribute("Number", v_u_34)
+                task.delay(0.125, function()
+                    if v_u_1.Library("Instance").Exists(p_u_33) and p_u_33:GetAttribute("Number") == v_u_34 then
+                        v_u_1.Library("Tween").New(p_u_33, "C0", CFrame.new(v_u_35), 0.375, "Sine")
+                    end
+                end)
+            end
+        end
+        local v38 = (p32 or "") .. "BlockedHit"
+        v_u_1.Get("Cache", "Sound").PlayCharacter(v38, p31, {
+            ["RandomizePitch"] = true
+        })
+        v37(p31:FindFirstChild("LeftShoulder", true))
+        v37(p31:FindFirstChild("RightShoulder", true))
+    end
+end
+
+function constantCheck()
+    while task.wait(0.016666666666666666) do
+        check()
+    end
+end
+
+function keyDown()
+    v_u_3 = true
+end
+
+function keyUp()
+    v_u_3 = false
+end
+
+v_u_1.Library("Input").KeyDownSignal("Block"):Connect(keyDown)
+v_u_1.Library("Input").KeyUpSignal("Block"):Connect(keyUp)
+v_u_1.Shared("Spawn").OnAnyCharacterAdded(setup)
+task.defer(constantCheck)
+return v2
