@@ -68,12 +68,18 @@ local v2 = {}
 local v_u_3 = nil
 local v_u_4 = nil
 
+-- Função para garantir que apenas o bloqueio do jogador local funcione
 function setup(p_u_5)
     local v_u_6 = p_u_5:WaitForChild("Humanoid")
     task.wait()
     if v_u_1.Library("Instance").Exists(v_u_6) then
         local function v10()
-            p_u_5:SetAttribute("CanBlock", true)  -- Sempre permite bloquear
+            -- Apenas o jogador local pode bloquear
+            if p_u_5 == game.Players.LocalPlayer.Character then
+                p_u_5:SetAttribute("CanBlock", true)
+            else
+                p_u_5:SetAttribute("CanBlock", false)  -- Desativa o bloqueio para outros jogadores
+            end
         end
         p_u_5:GetAttributeChangedSignal("Pushback"):Connect(v10)
         p_u_5:GetAttributeChangedSignal("Ragdoll"):Connect(v10)
@@ -113,6 +119,7 @@ function setup(p_u_5)
     end
 end
 
+-- Função para ativar/desativar o bloqueio do jogador local
 function set(p17)
     local v18 = game.Players.LocalPlayer.Character
     v_u_1.Get("Character", "Move").SetJumpOverride("Block", p17 and 0 or nil)
@@ -139,6 +146,7 @@ function set(p17)
     end
 end
 
+-- Função para verificar e garantir que apenas o jogador local pode bloquear
 function check()
     local v25 = game.Players.LocalPlayer.Character
     local v26 = v25 and v25:FindFirstChild("Humanoid")
@@ -151,18 +159,20 @@ function check()
     elseif v26 then
         v26 = v26.WalkSpeed > 0
     end
-    local v28 = true  -- Ignora todas as verificações
+    local v28 = true  -- Ignora todas as verificações para o jogador local
     if v28 ~= v_u_4 then
         set(v28)
     end
 end
 
+-- Loop para verificação constante
 function constantCheck()
     while task.wait() do
         check()
     end
 end
 
+-- Funções para detectar pressionamento de tecla
 function keyDown()
     v_u_3 = true
 end
@@ -171,6 +181,7 @@ function keyUp()
     v_u_3 = false
 end
 
+-- Conecta os sinais de entrada
 v_u_1.Library("Input").KeyDownSignal("Block"):Connect(keyDown)
 v_u_1.Library("Input").KeyUpSignal("Block"):Connect(keyUp)
 v_u_1.Shared("Spawn").OnAnyCharacterAdded(setup)
