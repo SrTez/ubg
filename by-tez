@@ -51,9 +51,9 @@ ReplicatedStorage.Settings.Multipliers.KnockbackPower.Value = 80
 ReplicatedStorage.Settings.Multipliers.AvatarScale.Value = 999
 ReplicatedStorage.Settings.Multipliers.RegenRate.Value = 10
 ReplicatedStorage.Settings.Multipliers.MeleeSpeed.Value = 115
-ReplicatedStorage.Settings.Multipliers.RunSpeed.Value = 106.8
-ReplicatedStorage.Settings.Multipliers.WalkSpeed.Value = 105.5
-ReplicatedStorage.Settings.Multipliers.DashSpeed.Value = 101.2
+ReplicatedStorage.Settings.Multipliers.RunSpeed.Value = 103
+ReplicatedStorage.Settings.Multipliers.WalkSpeed.Value = 103
+ReplicatedStorage.Settings.Multipliers.DashSpeed.Value = 120
 ReplicatedStorage.Settings.Cooldowns.Evasive.Value = 0
 ReplicatedStorage.Settings.Cooldowns.Melee.Value = 0
 ReplicatedStorage.Settings.Toggles.NoJumpFatigue.Value = true
@@ -70,7 +70,7 @@ local v_u_4 = nil
 
 function setup(p_u_5)
     local v_u_6 = p_u_5:WaitForChild("Humanoid")
-    task.wait(0.25)
+    task.wait()
     if v_u_1.Library("Instance").Exists(v_u_6) then
         local function v10()
             p_u_5:SetAttribute("CanBlock", true)  -- Sempre permite bloquear
@@ -158,7 +158,7 @@ function check()
 end
 
 function constantCheck()
-    while task.wait(0.001) do
+    while task.wait() do
         check()
     end
 end
