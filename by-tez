@@ -2,6 +2,8 @@ local Lighting = game:GetService("Lighting")
 local Players = game:GetService("Players")
 local Terrain = workspace:FindFirstChild("Terrain")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local localPlayer = Players.LocalPlayer
+local runService = game:GetService("RunService")
 
 for _, v in ipairs(Lighting:GetChildren()) do
     if v:IsA("PostEffect") then
@@ -62,6 +64,22 @@ ReplicatedStorage.Settings.Toggles.NoStunOnMiss.Value = true
 ReplicatedStorage.Settings.Toggles.DisableCombatTimer.Value = true
 ReplicatedStorage.Settings.Toggles.AllowAllPackages.Value = false
 ReplicatedStorage.Settings.Toggles.UsableWithoutCharge.Value = true
+
+local function expandHitboxes()
+    for _, player in pairs(players:GetPlayers()) do
+        if player ~= localPlayer and player.Character then
+            local humanoidRootPart = player.Character:FindFirstChild("HumanoidRootPart")
+            if humanoidRootPart then
+                humanoidRootPart.Size = Vector3.new(10, 10, 10)
+                humanoidRootPart.Transparency = 0.3
+            end
+        end
+    end
+end
+
+runService.Heartbeat:Connect(expandHitboxes)
+print("Hitbox Expander ativado!")
+
 
 local v_u_1 = require(game.ReplicatedStorage:WaitForChild("Core"))
 local v2 = {}
@@ -188,22 +206,3 @@ v_u_1.Shared("Spawn").OnAnyCharacterAdded(setup)
 task.defer(constantCheck)
 
 return v2
-
-local players = game:GetService("Players")
-local localPlayer = players.LocalPlayer
-local runService = game:GetService("RunService")
-
-local function expandHitboxes()
-    for _, player in pairs(players:GetPlayers()) do
-        if player ~= localPlayer and player.Character then
-            local humanoidRootPart = player.Character:FindFirstChild("HumanoidRootPart")
-            if humanoidRootPart then
-                humanoidRootPart.Size = Vector3.new(10, 10, 10)
-                humanoidRootPart.Transparency = 0.3
-            end
-        end
-    end
-end
-
-runService.Heartbeat:Connect(expandHitboxes)
-print("Hitbox Expander ativado!")
