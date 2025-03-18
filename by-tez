@@ -2,8 +2,6 @@ local Lighting = game:GetService("Lighting")
 local Players = game:GetService("Players")
 local Terrain = workspace:FindFirstChild("Terrain")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local localPlayer = Players.LocalPlayer
-local runService = game:GetService("RunService")
 
 for _, v in ipairs(Lighting:GetChildren()) do
     if v:IsA("PostEffect") then
@@ -65,28 +63,11 @@ ReplicatedStorage.Settings.Toggles.DisableCombatTimer.Value = true
 ReplicatedStorage.Settings.Toggles.AllowAllPackages.Value = false
 ReplicatedStorage.Settings.Toggles.UsableWithoutCharge.Value = true
 
-local function expandHitboxes()
-    for _, player in pairs(players:GetPlayers()) do
-        if player ~= localPlayer and player.Character then
-            local humanoidRootPart = player.Character:FindFirstChild("HumanoidRootPart")
-            if humanoidRootPart then
-                humanoidRootPart.Size = Vector3.new(10, 10, 10)
-                humanoidRootPart.Transparency = 0.3
-            end
-        end
-    end
-end
-
-runService.Heartbeat:Connect(expandHitboxes)
-print("Hitbox Expander ativado!")
-
-
 local v_u_1 = require(game.ReplicatedStorage:WaitForChild("Core"))
 local v2 = {}
 local v_u_3 = nil
 local v_u_4 = nil
 
--- Função para garantir que apenas o bloqueio do jogador local funcione
 function setup(p_u_5)
     local v_u_6 = p_u_5:WaitForChild("Humanoid")
     task.wait()
@@ -137,7 +118,6 @@ function setup(p_u_5)
     end
 end
 
--- Função para ativar/desativar o bloqueio do jogador local
 function set(p17)
     local v18 = game.Players.LocalPlayer.Character
     v_u_1.Get("Character", "Move").SetJumpOverride("Block", p17 and 0 or nil)
@@ -164,7 +144,6 @@ function set(p17)
     end
 end
 
--- Função para verificar e garantir que apenas o jogador local pode bloquear
 function check()
     local v25 = game.Players.LocalPlayer.Character
     local v26 = v25 and v25:FindFirstChild("Humanoid")
@@ -177,20 +156,18 @@ function check()
     elseif v26 then
         v26 = v26.WalkSpeed > 0
     end
-    local v28 = true  -- Ignora todas as verificações para o jogador local
+    local v28 = true
     if v28 ~= v_u_4 then
         set(v28)
     end
 end
 
--- Loop para verificação constante
 function constantCheck()
     while task.wait() do
         check()
     end
 end
 
--- Funções para detectar pressionamento de tecla
 function keyDown()
     v_u_3 = true
 end
