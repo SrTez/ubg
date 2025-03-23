@@ -163,7 +163,7 @@ function check()
 end
 
 function constantCheck()
-    while task.wait() do
+    while task.wait(0.01) do
         check()
     end
 end
