@@ -46,8 +46,8 @@ settings().Physics.AllowSleep = true
 settings().Rendering.QualityLevel = 1
 settings().Rendering.EagerBulkExecution = false
 
-ReplicatedStorage.Settings.Multipliers.RagdollPower.Value = 90
-ReplicatedStorage.Settings.Multipliers.KnockbackPower.Value = 90
+ReplicatedStorage.Settings.Multipliers.RagdollPower.Value = 80
+ReplicatedStorage.Settings.Multipliers.KnockbackPower.Value = 70
 ReplicatedStorage.Settings.Multipliers.AvatarScale.Value = 999
 ReplicatedStorage.Settings.Multipliers.RegenRate.Value = 10
 ReplicatedStorage.Settings.Multipliers.MeleeSpeed.Value = 114
