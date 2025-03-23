@@ -48,6 +48,7 @@ settings().Rendering.EagerBulkExecution = false
 
 ReplicatedStorage.Settings.Multipliers.RagdollPower.Value = 80
 ReplicatedStorage.Settings.Multipliers.KnockbackPower.Value = 70
+ReplicatedStorage.Settings.Multipliers.KnockbackTimer.Value = 150
 ReplicatedStorage.Settings.Multipliers.AvatarScale.Value = 15
 ReplicatedStorage.Settings.Multipliers.RegenRate.Value = 15
 ReplicatedStorage.Settings.Multipliers.MeleeSpeed.Value = 115
